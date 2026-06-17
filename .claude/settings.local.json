@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npx expo *)",
+      "Read(//home/da/**)",
+      "Read(//home/da/.nvm/versions/**)",
+      "Read(//usr/**)",
+      "Bash(curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(cp -r node_modules /home/da/a/)",
+      "Bash(cp package.json package-lock.json tsconfig.json app.json /home/da/a/)",
+      "Bash(cp -r assets /home/da/a/)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('main:',p.main\\); console.log\\('scripts:',JSON.stringify\\(p.scripts,null,2\\)\\)\")",
+      "Bash(node -e \"const p=require\\('./node_modules/react-native-reanimated/package.json'\\); console.log\\('version:',p.version\\); console.log\\('deps:',JSON.stringify\\(p.dependencies||{}\\)\\); console.log\\('peer:',JSON.stringify\\(p.peerDependencies||{}\\)\\)\")",
+      "Bash(git --version)",
+      "Bash(gh auth *)",
+      "Bash(git config *)",
+      "Bash(sudo -n true)",
+      "Bash(chmod 600 /tmp/.ghtok)",
+      "Bash(command -v git)",
+      "Bash(apt list *)",
+      "Bash(sudo -n apt-get install -y git)",
+      "Bash(command -v gh)",
+      "Bash(command -v hub)",
+      "Bash(gh --version)"
+    ]
+  }
+}
