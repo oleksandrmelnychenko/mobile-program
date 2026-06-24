@@ -20,12 +20,14 @@ export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: theme.colors.surfaceAlt,
+        backgroundColor: theme.colors.brandSoft,
+        borderWidth: 1,
+        borderColor: theme.colors.brandMuted,
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-      <Text weight="semibold" color="textSecondary" style={{ fontSize: size * 0.36 }}>
+      <Text weight="medium" color="brand" style={{ fontSize: size * 0.36 }}>
         {initials(name)}
       </Text>
     </View>

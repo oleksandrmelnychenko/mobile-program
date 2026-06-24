@@ -12,6 +12,7 @@ import {
   Screen,
   Spacer,
   Text,
+  ThemePicker,
 } from '@/components/ui';
 import { ROLE_PERMISSIONS } from '@/rbac';
 import { useTheme } from '@/theme';
@@ -57,6 +58,17 @@ export default function MoreScreen() {
       </Card>
 
       <View>
+        <SectionHeader title="Appearance" />
+        <Spacer size={theme.spacing.md} />
+        <Card variant="outlined">
+          <Text variant="footnote" color="textSecondary" style={{ marginBottom: theme.spacing.md }}>
+            Choose light, dark, or follow your device setting.
+          </Text>
+          <ThemePicker />
+        </Card>
+      </View>
+
+      <View>
         <SectionHeader title="Coming soon" />
         <Spacer size={theme.spacing.md} />
         <View style={{ gap: theme.spacing.md }}>
@@ -86,7 +98,7 @@ export default function MoreScreen() {
         </Card>
       </View>
 
-      <Button label="Sign out" variant="danger" onPress={logout} />
+          <Button label="Sign out" variant="ghost" onPress={logout} />
       <Text variant="caption" color="textMuted" center>
         Horizon Console · MVP build
       </Text>

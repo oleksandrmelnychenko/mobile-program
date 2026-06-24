@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Pressable, TextInput, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { useAuthStore } from '@/auth';
-import { Button, Card, Screen, Spacer, Text } from '@/components/ui';
+import { Box, Button, Card, Input, Screen, Spacer, Text } from '@/components/ui';
 import { useTheme } from '@/theme';
 import { ROLE_LABELS, type Role } from '@/types';
 
@@ -16,54 +16,60 @@ export default function LoginScreen() {
 
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<Role>('admin');
+  const isDark = theme.scheme === 'dark';
 
   return (
     <Screen contentStyle={{ flex: 1, justifyContent: 'center' }}>
       <View style={{ alignItems: 'center', marginBottom: theme.spacing.xxl }}>
         <View
           style={{
-            width: 64,
-            height: 64,
-            borderRadius: theme.radius.lg,
-            backgroundColor: theme.colors.brand,
+            width: 52,
+            height: 52,
+            borderRadius: theme.radius.md,
+            backgroundColor: isDark ? theme.colors.surfaceAlt : theme.colors.ink,
             alignItems: 'center',
             justifyContent: 'center',
+            borderWidth: 1,
+            borderColor: theme.colors.border,
           }}
         >
-          <Text variant="title1" style={{ color: theme.colors.textOnBrand }}>
+          <Text
+            variant="title3"
+            weight="medium"
+            style={{ color: isDark ? theme.colors.brand : theme.colors.textOnInk }}
+          >
             H
           </Text>
         </View>
-        <Spacer size={theme.spacing.lg} />
-        <Text variant="title1">Horizon Console</Text>
-        <Text color="textSecondary">Admin cockpit</Text>
-      </View>
 
-      <Card>
-        <Text variant="footnote" weight="semibold" color="textSecondary">
-          EMAIL
+        <Spacer size={theme.spacing.lg} />
+        <Text variant="display" center>
+          Horizon Console
         </Text>
         <Spacer size={theme.spacing.sm} />
-        <TextInput
+        <Text color="textSecondary" center>
+          Admin cockpit
+        </Text>
+      </View>
+
+      <Card variant="outlined">
+        <Input
+          label="Email"
           value={email}
           onChangeText={setEmail}
           placeholder="you@horizon.io"
-          placeholderTextColor={theme.colors.textMuted}
           autoCapitalize="none"
           keyboardType="email-address"
-          style={{
-            backgroundColor: theme.colors.surfaceAlt,
-            borderRadius: theme.radius.md,
-            paddingHorizontal: theme.spacing.lg,
-            height: 48,
-            color: theme.colors.text,
-            fontSize: theme.fontSize.body,
-          }}
         />
 
         <Spacer size={theme.spacing.lg} />
-        <Text variant="footnote" weight="semibold" color="textSecondary">
-          ROLE (MVP STUB)
+        <Text
+          variant="footnote"
+          weight="medium"
+          color="textSecondary"
+          style={{ letterSpacing: theme.letterSpacing.caps, textTransform: 'uppercase' }}
+        >
+          Role
         </Text>
         <Spacer size={theme.spacing.sm} />
         <View style={{ gap: theme.spacing.sm }}>
@@ -73,46 +79,63 @@ export default function LoginScreen() {
               <Pressable
                 key={r}
                 onPress={() => setRole(r)}
-                style={{
+                style={({ pressed }) => ({
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   borderRadius: theme.radius.md,
                   borderWidth: 1,
                   borderColor: selected ? theme.colors.brand : theme.colors.border,
-                  backgroundColor: selected ? `${theme.colors.brand}14` : 'transparent',
-                  paddingHorizontal: theme.spacing.lg,
+                  backgroundColor: selected
+                    ? theme.colors.brandSoft
+                    : pressed
+                      ? theme.colors.brandSoft
+                      : theme.colors.surface,
+                  paddingHorizontal: theme.spacing.md,
                   paddingVertical: theme.spacing.md,
-                }}
+                })}
               >
-                <Text weight={selected ? 'semibold' : 'regular'}>{ROLE_LABELS[r]}</Text>
+                <Text weight={selected ? 'medium' : 'regular'} color={selected ? 'brand' : 'text'}>
+                  {ROLE_LABELS[r]}
+                </Text>
                 <View
                   style={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: 10,
-                    borderWidth: 2,
-                    borderColor: selected ? theme.colors.brand : theme.colors.border,
+                    width: 16,
+                    height: 16,
+                    borderRadius: 8,
+                    borderWidth: 1.5,
+                    borderColor: selected ? theme.colors.brand : theme.colors.borderStrong,
                     backgroundColor: selected ? theme.colors.brand : 'transparent',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
-                />
+                >
+                  {selected ? (
+                    <View
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: 3,
+                        backgroundColor: theme.colors.textOnBrand,
+                      }}
+                    />
+                  ) : null}
+                </View>
               </Pressable>
             );
           })}
         </View>
 
         {error ? (
-          <Text color="danger" variant="footnote" style={{ marginTop: theme.spacing.md }}>
-            {error}
-          </Text>
+          <Box variant="brand" padding={theme.spacing.md} style={{ marginTop: theme.spacing.md }}>
+            <Text color="danger" variant="footnote">
+              {error}
+            </Text>
+          </Box>
         ) : null}
 
         <Spacer size={theme.spacing.xl} />
-        <Button
-          label="Sign in"
-          loading={signingIn}
-          onPress={() => login({ email, role })}
-        />
+        <Button label="Sign in" size="lg" loading={signingIn} onPress={() => login({ email, role })} />
       </Card>
 
       <Text variant="caption" color="textMuted" center style={{ marginTop: theme.spacing.lg }}>

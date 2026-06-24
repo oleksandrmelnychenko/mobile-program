@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Text as RNText } from 'react-native';
+import { Platform, Text as RNText } from 'react-native';
 
 import { useRole } from '@/auth';
 import { canAny } from '@/rbac';
@@ -17,10 +17,17 @@ export default function AppLayout() {
         tabBarActiveTintColor: theme.colors.brand,
         tabBarInactiveTintColor: theme.colors.textMuted,
         tabBarStyle: {
-          backgroundColor: theme.colors.surface,
+          backgroundColor: theme.colors.background,
           borderTopColor: theme.colors.border,
+          borderTopWidth: 1,
+          height: Platform.OS === 'ios' ? 84 : 60,
+          paddingTop: 6,
         },
-        tabBarLabelStyle: { fontSize: 11 },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '500',
+          letterSpacing: 0.3,
+        },
       }}
     >
       {TABS.map((tab) => {
@@ -31,10 +38,17 @@ export default function AppLayout() {
             name={tab.name}
             options={{
               title: tab.title,
-              // Hide tabs the current role cannot access.
               href: visible ? undefined : null,
-              tabBarIcon: ({ color }) => (
-                <RNText style={{ color, fontSize: 18 }}>{tab.icon}</RNText>
+              tabBarIcon: ({ color, focused }) => (
+                <RNText
+                  style={{
+                    color,
+                    fontSize: focused ? 17 : 16,
+                    opacity: focused ? 1 : 0.7,
+                  }}
+                >
+                  {tab.icon}
+                </RNText>
               ),
             }}
           />

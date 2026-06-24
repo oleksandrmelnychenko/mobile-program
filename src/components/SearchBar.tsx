@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 
 import { Text } from '@/components/ui';
@@ -13,6 +14,8 @@ export function SearchBar({
   placeholder?: string;
 }) {
   const theme = useTheme();
+  const [focused, setFocused] = useState(false);
+
   return (
     <View
       style={{
@@ -21,13 +24,15 @@ export function SearchBar({
         gap: theme.spacing.sm,
         backgroundColor: theme.colors.surface,
         borderWidth: 1,
-        borderColor: theme.colors.border,
+        borderColor: focused ? theme.colors.brand : theme.colors.border,
         borderRadius: theme.radius.md,
-        paddingHorizontal: theme.spacing.lg,
-        height: 46,
+        paddingHorizontal: theme.spacing.md,
+        height: 44,
       }}
     >
-      <Text color="textMuted">⌕</Text>
+      <Text color={focused ? 'brand' : 'textMuted'} mono variant="footnote">
+        /
+      </Text>
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -35,7 +40,14 @@ export function SearchBar({
         placeholderTextColor={theme.colors.textMuted}
         autoCapitalize="none"
         autoCorrect={false}
-        style={{ flex: 1, color: theme.colors.text, fontSize: theme.fontSize.body }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={{
+          flex: 1,
+          color: theme.colors.text,
+          fontSize: theme.fontSize.body,
+          fontWeight: theme.fontWeight.regular,
+        }}
       />
     </View>
   );

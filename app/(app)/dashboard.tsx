@@ -58,7 +58,7 @@ export default function DashboardScreen() {
           </View>
 
           {canApprove && data.pendingApprovals > 0 ? (
-            <Card>
+            <Card variant="brand">
               <SpaceBetween>
                 <View style={{ flex: 1 }}>
                   <Text variant="callout" weight="semibold">
@@ -80,7 +80,7 @@ export default function DashboardScreen() {
           <View>
             <SectionHeader title="Notifications" />
             <Spacer size={theme.spacing.md} />
-            <Card>
+            <Card variant="elevated">
               {data.notifications.map((n, idx) => (
                 <View key={n.id}>
                   {idx > 0 ? (

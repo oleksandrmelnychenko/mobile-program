@@ -12,7 +12,6 @@ import { useTheme } from '@/theme';
 
 type ScreenProps = {
   children: ReactNode;
-  /** When true, wraps children in a vertical ScrollView. */
   scroll?: boolean;
   refreshing?: boolean;
   onRefresh?: () => void;
@@ -32,30 +31,29 @@ export function Screen({
   const padding = { padding: theme.spacing.lg, gap: theme.spacing.lg };
 
   return (
-    <SafeAreaView
-      edges={edges}
-      style={[styles.flex, { backgroundColor: theme.colors.background }]}
-    >
-      {scroll ? (
-        <ScrollView
-          contentContainerStyle={[padding, contentStyle]}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            onRefresh ? (
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                tintColor={theme.colors.brand}
-              />
-            ) : undefined
-          }
-        >
-          {children}
-        </ScrollView>
-      ) : (
-        <View style={[styles.flex, padding, contentStyle]}>{children}</View>
-      )}
-    </SafeAreaView>
+    <View style={[styles.flex, { backgroundColor: theme.colors.background }]}>
+      <SafeAreaView edges={edges} style={styles.flex}>
+        {scroll ? (
+          <ScrollView
+            contentContainerStyle={[padding, contentStyle]}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              onRefresh ? (
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={theme.colors.brand}
+                />
+              ) : undefined
+            }
+          >
+            {children}
+          </ScrollView>
+        ) : (
+          <View style={[styles.flex, padding, contentStyle]}>{children}</View>
+        )}
+      </SafeAreaView>
+    </View>
   );
 }
 

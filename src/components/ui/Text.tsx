@@ -1,9 +1,10 @@
-import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
+import { Platform, Text as RNText, type TextProps as RNTextProps } from 'react-native';
 
 import { useTheme } from '@/theme';
 import type { ThemeColors } from '@/theme';
 
 type Variant =
+  | 'display'
   | 'title1'
   | 'title2'
   | 'title3'
@@ -19,6 +20,7 @@ export type TextProps = RNTextProps & {
   weight?: Weight;
   color?: keyof ThemeColors;
   center?: boolean;
+  mono?: boolean;
 };
 
 export function Text({
@@ -26,16 +28,27 @@ export function Text({
   weight,
   color = 'text',
   center,
+  mono = false,
   style,
   ...rest
 }: TextProps) {
   const theme = useTheme();
+
   const defaultWeight: Weight =
-    variant === 'title1' || variant === 'title2'
-      ? 'bold'
+    variant === 'display' || variant === 'title1' || variant === 'title2'
+      ? 'regular'
       : variant === 'title3' || variant === 'callout'
-        ? 'semibold'
+        ? 'medium'
         : 'regular';
+
+  const tracking =
+    variant === 'display'
+      ? -1.2
+      : variant === 'title1' || variant === 'title2'
+        ? theme.letterSpacing.tight
+        : variant === 'caption' || variant === 'footnote'
+          ? theme.letterSpacing.wide
+          : theme.letterSpacing.normal;
 
   return (
     <RNText
@@ -44,7 +57,11 @@ export function Text({
           fontSize: theme.fontSize[variant],
           fontWeight: theme.fontWeight[weight ?? defaultWeight],
           color: theme.colors[color],
+          letterSpacing: tracking,
           textAlign: center ? 'center' : undefined,
+          fontFamily: mono
+            ? Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' })
+            : undefined,
         },
         style,
       ]}

@@ -22,6 +22,7 @@ expo-env.d.ts
 .DS_Store
 *.log
 .env*.local
+server/data/
 
 # editor
 .idea/

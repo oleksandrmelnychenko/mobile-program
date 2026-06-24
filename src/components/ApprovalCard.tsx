@@ -26,11 +26,11 @@ export function ApprovalCard({
   const theme = useTheme();
 
   return (
-    <Card>
+    <Card variant="elevated">
       <SpaceBetween>
         <Badge label={KIND_LABEL[approval.kind]} tone="info" />
         {approval.amount ? (
-          <Text variant="callout" weight="bold">
+          <Text variant="callout" weight="bold" color="brand">
             {formatMoney(approval.amount)}
           </Text>
         ) : null}
@@ -51,13 +51,17 @@ export function ApprovalCard({
         <Row style={{ marginTop: theme.spacing.lg, gap: theme.spacing.md }}>
           <Button
             label="Reject"
-            variant="secondary"
+            variant="outline"
+            size="sm"
+            fullWidth={false}
             onPress={() => onDecide?.('reject')}
             disabled={busy}
             style={{ flex: 1 }}
           />
           <Button
             label="Approve"
+            size="sm"
+            fullWidth={false}
             onPress={() => onDecide?.('approve')}
             loading={busy}
             style={{ flex: 1 }}

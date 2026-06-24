@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useTheme } from '@/theme';
 import { Text } from './Text';
@@ -10,26 +10,36 @@ type BadgeProps = {
   tone?: BadgeTone;
 };
 
-/** Blend a hex colour with the surface to get a soft tinted background. */
-function tint(hex: string, alpha = '22') {
-  return `${hex}${alpha}`;
-}
+const SOFT_KEY = {
+  success: 'successSoft',
+  warning: 'warningSoft',
+  danger: 'dangerSoft',
+  info: 'infoSoft',
+  neutral: 'neutralSoft',
+} as const satisfies Record<BadgeTone, keyof import('@/theme').ThemeColors>;
 
 export function Badge({ label, tone = 'neutral' }: BadgeProps) {
   const theme = useTheme();
   const color = theme.colors[tone];
+  const bg = theme.colors[SOFT_KEY[tone]];
 
   return (
     <View
       style={{
         alignSelf: 'flex-start',
-        backgroundColor: tint(color),
+        backgroundColor: bg,
         borderRadius: theme.radius.pill,
-        paddingHorizontal: theme.spacing.md,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: theme.colors.border,
+        paddingHorizontal: theme.spacing.sm + 2,
         paddingVertical: theme.spacing.xs,
       }}
     >
-      <Text variant="caption" weight="semibold" style={{ color }}>
+      <Text
+        variant="caption"
+        weight="medium"
+        style={{ color, letterSpacing: theme.letterSpacing.wide }}
+      >
         {label}
       </Text>
     </View>

@@ -1,7 +1,6 @@
 import {
   ActivityIndicator,
   Pressable,
-  StyleSheet,
   View,
   type StyleProp,
   type ViewStyle,
@@ -10,12 +9,14 @@ import {
 import { useTheme } from '@/theme';
 import { Text } from './Text';
 
-type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
+type Variant = 'primary' | 'ink' | 'secondary' | 'outline' | 'danger' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
 
 type ButtonProps = {
   label: string;
   onPress?: () => void;
   variant?: Variant;
+  size?: Size;
   loading?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
@@ -23,10 +24,13 @@ type ButtonProps = {
   style?: StyleProp<ViewStyle>;
 };
 
+const HEIGHT: Record<Size, number> = { sm: 36, md: 44, lg: 48 };
+
 export function Button({
   label,
   onPress,
   variant = 'primary',
+  size = 'md',
   loading = false,
   disabled = false,
   fullWidth = true,
@@ -35,18 +39,25 @@ export function Button({
 }: ButtonProps) {
   const theme = useTheme();
   const isDisabled = disabled || loading;
+  const height = HEIGHT[size];
+  const isLight = theme.scheme === 'light';
 
-  const bg: Record<Variant, string> = {
-    primary: theme.colors.brand,
-    secondary: theme.colors.surfaceAlt,
-    danger: theme.colors.danger,
-    ghost: 'transparent',
-  };
   const fg: Record<Variant, keyof typeof theme.colors> = {
     primary: 'textOnBrand',
+    ink: 'textOnInk',
     secondary: 'text',
+    outline: 'text',
     danger: 'textOnBrand',
     ghost: 'brand',
+  };
+
+  const bg: Record<Variant, string | undefined> = {
+    primary: theme.colors.brand,
+    ink: isLight ? theme.colors.ink : theme.colors.surfaceAlt,
+    secondary: theme.colors.surface,
+    outline: 'transparent',
+    danger: theme.colors.danger,
+    ghost: 'transparent',
   };
 
   return (
@@ -56,12 +67,23 @@ export function Button({
       style={({ pressed }) => [
         styles.base,
         {
-          backgroundColor: bg[variant],
+          height,
           borderRadius: theme.radius.md,
-          opacity: isDisabled ? 0.5 : pressed ? 0.85 : 1,
           alignSelf: fullWidth ? 'stretch' : 'flex-start',
-          paddingHorizontal: theme.spacing.xl,
+          paddingHorizontal: size === 'sm' ? theme.spacing.md : theme.spacing.lg,
+          backgroundColor: bg[variant],
+          opacity: isDisabled ? 0.45 : pressed ? 0.88 : 1,
         },
+        variant === 'outline' && {
+          borderWidth: 1,
+          borderColor: theme.colors.borderStrong,
+          backgroundColor: pressed ? theme.colors.brandSoft : theme.colors.surface,
+        },
+        variant === 'secondary' && {
+          borderWidth: 1,
+          borderColor: theme.colors.border,
+        },
+        variant === 'ghost' && pressed && { backgroundColor: theme.colors.brandSoft },
         style,
       ]}
     >
@@ -70,7 +92,11 @@ export function Button({
       ) : (
         <View style={styles.content}>
           {icon}
-          <Text weight="semibold" color={fg[variant]}>
+          <Text
+            variant={size === 'sm' ? 'footnote' : 'body'}
+            weight="medium"
+            color={fg[variant]}
+          >
             {label}
           </Text>
         </View>
@@ -79,15 +105,14 @@ export function Button({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   base: {
-    height: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   content: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
     gap: 8,
   },
-});
+};

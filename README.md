@@ -11,7 +11,22 @@ npm run android      # Android
 npm run ios          # iOS (macOS)
 npm run typecheck    # tsc --noEmit
 npm run doctor       # expo-doctor
+npm run server:install   # install server deps (first time)
+npm run server       # start Node API on :3000
 ```
+
+### Backend (Node.js)
+
+A Mobile BFF lives in `server/` — Express + JWT, same data as the in-app mock.
+
+```bash
+npm run server:install
+npm run server          # http://localhost:3000
+```
+
+The app talks to it over HTTP by default (`src/api/http/adapter.ts`). For a physical device, set `EXPO_PUBLIC_API_URL` to your machine's LAN IP. Use `EXPO_PUBLIC_USE_API=false` to fall back to the offline mock.
+
+See [server/README.md](server/README.md) for the full API reference.
 
 > Node is managed via nvm in this environment — run `. ~/.nvm/nvm.sh` first if `node` isn't found.
 
@@ -38,14 +53,14 @@ src/
   components/              composites (MetricCard, ApprovalCard, ListRow, …)
   types/                   DTOs (auth, domain, dashboard) — mirrors web naming
   rbac/                    Permission matrix + can()/canAny()
-  api/                     HorizonApi interface + swappable mock adapter
+  api/                     HorizonApi interface + HTTP or mock adapter
   auth/                    zustand store + SecureStore persistence
   lib/                     formatters (money, dates, relative time)
 ```
 
-### Swapping the mock for the real Mobile BFF
+### API layer
 
-The whole app talks to one interface, `HorizonApi` (`src/api/client.ts`). The MVP ships `MockHorizonApi` (`src/api/mock/`). To go live, implement `HorizonApi` with an HTTP client (fetch + auth header + error mapping) and change the single export in `src/api/index.ts`. No screen changes required.
+The app uses `HorizonApi` (`src/api/client.ts`). By default `HttpHorizonApi` calls the Node server; set `EXPO_PUBLIC_USE_API=false` for the in-app mock.
 
 ### RBAC
 

@@ -4,17 +4,21 @@ import {
   darkColors,
   fontSize,
   fontWeight,
+  letterSpacing,
   lightColors,
   radius,
   spacing,
   type Theme,
 } from './tokens';
+import { resolveScheme } from './resolve';
+import { useThemeStore } from './store';
 
 export * from './tokens';
+export { shadow, type ShadowLevel } from './shadows';
+export { resolveScheme, type ColorScheme, type ThemePreference } from './resolve';
+export { useThemeStore } from './store';
 
-/** Resolve the active theme from the OS colour scheme. */
-export function useTheme(): Theme {
-  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+function buildTheme(scheme: 'light' | 'dark'): Theme {
   return {
     scheme,
     colors: scheme === 'dark' ? darkColors : lightColors,
@@ -22,5 +26,23 @@ export function useTheme(): Theme {
     radius,
     fontSize,
     fontWeight,
+    letterSpacing,
   };
+}
+
+/** Active theme — respects user preference (system / light / dark). */
+export function useTheme(): Theme {
+  const preference = useThemeStore((s) => s.preference);
+  const systemScheme = useColorScheme();
+  const scheme = resolveScheme(preference, systemScheme);
+  return buildTheme(scheme);
+}
+
+/** Stored preference before override (system follows OS). */
+export function useThemePreference() {
+  return useThemeStore((s) => s.preference);
+}
+
+export function useSetThemePreference() {
+  return useThemeStore((s) => s.setPreference);
 }
